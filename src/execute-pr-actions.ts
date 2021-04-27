@@ -122,7 +122,9 @@ function getMutationsForChangingPRState(actions: Actions, pr: PR_repository_pull
 function getMutationsForReRunningCI(repoId: string, actions: Actions) {
     return [
         actions.reRunActionsCheckSuiteID
-            ? createMutation<schema.RerequestCheckSuiteInput>("rerequestCheckSuite", { checkSuiteId: actions.reRunActionsCheckSuiteID, repositoryId: repoId })
+            ? createMutation<schema.RerequestCheckSuiteInput>(
+                "rerequestCheckSuite",
+                { checkSuiteId: actions.reRunActionsCheckSuiteID, repositoryId: repoId })
             : null,
     ];
 }
