@@ -131,6 +131,11 @@ export interface PrInfo {
 
     readonly isFirstContribution: boolean;
 
+    /*
+     * True if there are more files than we can fetch from the initial query
+     */
+    readonly tooManyFiles: boolean;
+
     readonly popularityLevel: PopularityLevel;
 
     readonly pkgInfo: readonly PackageInfo[];
@@ -201,6 +206,8 @@ export async function deriveStateForPR(
     const lastBlessing = getLastMaintainerBlessingDate(prInfo.timelineItems);
     const reopenedDate = getReopenedDate(prInfo.timelineItems);
 
+    const tooManyFiles = prInfo.files?.totalCount !== prInfo.files?.nodes?.length;
+
     const pkgInfoEtc = await getPackageInfosEtc(
         noNullish(prInfo.files?.nodes).map(f => f.path).sort(),
         prInfo.headRefOid, fetchFile, async name => await getDownloads(name, lastPushDate));
@@ -230,6 +237,7 @@ export async function deriveStateForPR(
         popularityLevel,
         pkgInfo,
         reviews,
+        tooManyFiles,
         ...getCIResult(headCommit.checkSuites),
     };
 
